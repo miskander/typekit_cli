@@ -16,7 +16,7 @@ module TypeKitCli
 
     private
     def prompt_for_token
-      auth_token = ask("Typekit Auth Token:")
+      auth_token = ask("Typekit API Token:")
       if yes?("Would you like to cache this token? [y/N]:")
         say("Token will be cached to in #{CACHE_FILE} file")
         File.open(CACHE_FILE, 'w') { |file| file.write(auth_token) }
