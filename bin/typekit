@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+require 'typekit_cli'
+
+class TypeKit<Thor
+  include TypeKitCli::RequestHelpers
+  include TypeKitCli::CliResponseFormaters
+
+  desc "list_kits", "List all kits for a given account"
+
+  def list_kits
+    response = get_request
+    if response.code == "200"
+      output_simple_table(JSON.parse(response.body)['kits'])
+    else
+      output_error_line("An error occurred while trying to fetch your kits, response code #{response.code}")
+    end
+  end
+
+  desc "show_draft_kit KIT_ID", "Fetch draft version for specified kit name"
+
+  def show_draft_kit(kit_id)
+    response = get_request(kit_id)
+    if response.code == "200"
+      output_kit_and_families(JSON.parse(response.body), kit_id)
+    else
+      output_error_line("An error occurred while trying to fetch draft kit, response code #{response.code}")
+    end
+  end
+
+  desc "publish_kit KIT_ID", "Publish a draft kit"
+
+  def publish_kit(kit_name)
+    response = post_request("#{kit_name}/publish")
+    if response.code == "200"
+      output_simple_table(JSON.parse(response.body))
+    else
+      output_error_line("An error occurred while trying to fetch published kit, response code #{response.code}")
+    end
+  end
+
+  desc "show_published_kit KIT_ID", "Fetch published version for specified kit name"
+
+  def show_published_kit(kit_id)
+    response = get_request("#{kit_id}/published")
+    if response.code == "200"
+      output_kit_and_families(JSON.parse(response.body), kit_id)
+    else
+      output_error_line("An error occurred while trying to fetch published kit, response code #{response.code}")
+    end
+  end
+
+  desc "show_kit_family KIT_ID FAMILY_ID", "Fetch information about a font family used in a kit"
+
+  def show_kit_family(kit_name, family_id)
+    response = get_request("#{kit_name}/families/#{family_id}")
+    if response.code == "200"
+      output_simple_table(JSON.parse(response.body)["family"])
+    else
+      output_error_line("An error occurred while trying to fetch kit family, response code #{response.code}")
+    end
+  end
+end
+
+#Allow file to be required without starting the CLI interface or prompting for auth token.
+if Pathname.new($0).basename == Pathname.new(__FILE__).basename
+  #Load cached auth token or prompt user for it.
+  AUTH_TOKEN = TypeKitCli::AuthToken.new().get_token
+
+  #Start the Thor CLI interface
+  TypeKit.start(ARGV)
+end
