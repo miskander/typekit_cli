@@ -65,6 +65,10 @@ end
 if Pathname.new($0).basename == Pathname.new(__FILE__).basename
   #Load cached auth token or prompt user for it.
   AUTH_TOKEN = TypeKitCli::AuthToken.new().get_token
+  if AUTH_TOKEN.empty?
+    puts("You must provide an api token to continue")
+    exit
+  end
 
   #Start the Thor CLI interface
   TypeKit.start(ARGV)
