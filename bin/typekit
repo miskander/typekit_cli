@@ -29,8 +29,8 @@ class TypeKit<Thor
 
   desc "publish_kit KIT_ID", "Publish a draft kit"
 
-  def publish_kit(kit_name)
-    response = post_request("#{kit_name}/publish")
+  def publish_kit(kit_id)
+    response = post_request("#{kit_id}/publish")
     if response.code == "200"
       output_simple_table(JSON.parse(response.body))
     else
@@ -51,8 +51,8 @@ class TypeKit<Thor
 
   desc "show_kit_family KIT_ID FAMILY_ID", "Fetch information about a font family used in a kit"
 
-  def show_kit_family(kit_name, family_id)
-    response = get_request("#{kit_name}/families/#{family_id}")
+  def show_kit_family(kit_id, family_id)
+    response = get_request("#{kit_id}/families/#{family_id}")
     if response.code == "200"
       output_simple_table(JSON.parse(response.body)["family"])
     else
