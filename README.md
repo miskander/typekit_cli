@@ -1,3 +1,5 @@
+[![typekit_cli API Documentation](https://www.omniref.com/ruby/gems/typekit_cli.png)](https://www.omniref.com/ruby/gems/typekit_cli)
+
 # TypeKitCli
 Command line interface to interact with your type kit kits and associated font families.
 
